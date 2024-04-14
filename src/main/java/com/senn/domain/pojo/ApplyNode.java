@@ -1,5 +1,6 @@
 package com.senn.domain.pojo;
 
+import com.senn.domain.dto.WorkFlowNodeInfo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,9 +17,10 @@ public class ApplyNode {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
-    public ApplyNode(Apply apply, WorkFlowNode nextWorkFlowNode) {
+    public ApplyNode(Apply apply, WorkFlowNodeInfo nextWorkFlowNode) {
         this.applyId = apply.getApplyId();
         this.workFlowNodeHandleName = nextWorkFlowNode.getWorkFlowNodeHandleName();
+        this.workFlowNodeId = nextWorkFlowNode.getWorkFlowNodeId();
         this.nodeType = nextWorkFlowNode.getWorkFlowNodeType();
     }
 }

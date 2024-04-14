@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Apply {
     private Long applyId;
     private Long workFlowId;
+    private String workFlowName;
     private Long creator;
     private Long applyStatus;
     private Long applyNodeId;

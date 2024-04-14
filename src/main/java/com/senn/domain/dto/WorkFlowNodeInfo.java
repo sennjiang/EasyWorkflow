@@ -1,15 +1,12 @@
-package com.senn.domain.pojo;
+package com.senn.domain.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class WorkFlowNode {
+public class WorkFlowNodeInfo {
     private Long workFlowNodeId;
     private String workFlowNodeName;
     private Integer workFlowNodeType;
+    private Integer preNodeStatus;
     private String workFlowNodeHandleName;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

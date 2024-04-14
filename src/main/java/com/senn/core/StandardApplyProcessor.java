@@ -1,12 +1,14 @@
 package com.senn.core;
 
+import com.senn.domain.dto.ApplyCreateInfo;
+import com.senn.domain.dto.WorkFlowNodeInfo;
 import com.senn.domain.pojo.Apply;
 import com.senn.domain.pojo.ApplyNode;
-import com.senn.domain.pojo.WorkFlowNode;
 import com.senn.enums.ApplyStatus;
 import com.senn.mapper.ApplyMapper;
 import com.senn.mapper.WorkFlowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,13 @@ public class StandardApplyProcessor implements ApplyProcessor {
 
     @Autowired
     WorkFlowMapper workFlowMapper;
+
+    private Scheduler scheduler;
+
+    @Override
+    public boolean addApply(ApplyCreateInfo applyInfo) {
+        return false;
+    }
 
     @Override
     @Transactional
@@ -50,12 +59,35 @@ public class StandardApplyProcessor implements ApplyProcessor {
     }
 
     @Override
-    public List<WorkFlowNode> lisAllNextNode(Long applyNodeId) {
+    public void setScheduler(Scheduler scheduler) {
+        this.scheduler = scheduler;
+    }
+
+    @Override
+    public List<WorkFlowNodeInfo> lisAllNextNode(Long applyNodeId) {
         return workFlowMapper.lisAllNextNode(applyNodeId);
     }
 
     @Override
     public NodeHandler getNodeHandler(String nodeHandleName) {
         return nodeHandlerMap.getOrDefault(nodeHandleName, new DefaultNodeHandler());
+    }
+
+    @Override
+    @Scheduled(cron = "0 /10 ?")
+    public void systemScheduleExecute() {
+        Scheduler scheduler = getScheduler();
+        List<ApplyNode> applyNodes = scheduler.listApplyNode4Execute();
+        for (ApplyNode applyNode : applyNodes) {
+            NodeHandler nodeHandler = getNodeHandler(applyNode.getWorkFlowNodeHandleName());
+            nodeHandler.nodeExecute(applyNode);
+        }
+    }
+
+    private Scheduler getScheduler() {
+        if (this.scheduler == null) {
+            this.scheduler = new DefaultScheduler();
+        }
+        return this.scheduler;
     }
 }
