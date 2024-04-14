@@ -2,10 +2,12 @@ package com.senn.domain.pojo;
 
 import com.senn.domain.dto.WorkFlowNodeInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class ApplyNode {
     private Long applyNodeId;
     private Long applyId;
